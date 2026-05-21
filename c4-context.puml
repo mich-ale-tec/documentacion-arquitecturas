@@ -1,0 +1,31 @@
+@startuml
+!define C4P https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master
+!includeurl C4P/C4_Context.puml
+
+title Identificación de Actores y Límites del Sistema\nGalaxy PetCare
+
+Person(usuario, "Usuario", "Dueño de mascota que agenda servicios y gestiona información")
+Person(personal, "Personal Veterinario / Groomers", "Atienden citas y servicios")
+Person(admin, "Administrador", "Gestiona catálogos, personal y configuración")
+Person(cuiddaor, "Cuidador", "Atiende el hotel de mascotas")
+
+
+System(galaxyPetCare, "Galaxy PetCare", "Plataforma para agendar citas, gestionar mascotas y administrar servicios")
+
+System_Ext(notifProvider, "Proveedor de Notificaciones", "SMS/Email/WhatsApp")
+System_Ext(paymentGateway, "Pasarela de Pagos", "Procesa pagos de servicios")
+System_Ext(reniec, "RENIEC", "Validación de identidad (opcional)")
+
+Rel(usuario, galaxyPetCare, "Usa para gestionar citas y mascotas")
+Rel(personal, galaxyPetCare, "Gestiona servicios y atención")
+Rel(admin, galaxyPetCare, "Administra catálogos y configuración")
+Rel(cuiddaor, galaxyPetCare, "Consulta las mascotas")
+
+
+Rel(galaxyPetCare, notifProvider, "Envía notificaciones")
+Rel(galaxyPetCare, paymentGateway, "Procesa pagos")
+Rel(galaxyPetCare, reniec, "Verifica identidad", "HTTPS")
+
+
+SHOW_LEGEND()
+@enduml
