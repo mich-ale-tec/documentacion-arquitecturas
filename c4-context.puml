@@ -4,20 +4,20 @@
 
 title Identificación de Actores y Límites del Sistema\nGalaxy PetCare
 
-Person(provedor, "Proveedor", "Persona que proporciona cuentas de streaming")
-Person(administrador, "Administrador", "Persona que gestiona la autenticidad de las cuentas")
-Person(administrador3, "Administrador3", "Persona que gestiona la distribucion de los perfiles")
-Person(administrador2, "Administrador2", "Persona que gestiona las pagos y suscripciones")
+Person(provedor, "Proveedor Cuentas", "Persona que proporciona cuentas de streaming")
+Person(validador, "Validador Cuentas", "Persona que gestiona la autenticidad de las cuentas")
+Person(administrador3, "Administrador Perfiles", "Persona que gestiona la distribucion de los perfiles")
+Person(administrador2, "Personal Pagos", "Persona que gestiona las pagos y suscripciones")
 Person(atencion, "Personal Atención", "Personal que gestiona las incidencias de la cuenta")
 
 
 System(tugeder, "Tugeder", "Plataforma que adquiere, distribuye y gestiona cuentas de streaming")
 
-System_Ext(whatsapp, "Establece el canal principal de comunicación")
+System_Ext(whatsapp,"WhatsApp", "Establece el canal principal de comunicación")
 System_Ext(pagos, "Pasarela de Pagos", "Procesa pagos de servicios")
 
 Rel(provedor, tugeder, "Registra una cuenta de streming")
-Rel(administrador, tugeder, "Verifica la autenticidad de las cuentas registradas")
+Rel(validador, tugeder, "Verifica la autenticidad de las cuentas registradas")
 Rel(administrador3, tugeder, "Apertura cuentas, cantidad de perfiles y precios")
 Rel(administrador2, tugeder, "Habilita suscripciones")
 Rel(atencion, tugeder, "Registra las incidencias de los usuarios")
