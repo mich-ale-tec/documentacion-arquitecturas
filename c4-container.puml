@@ -1,0 +1,63 @@
+@startuml
+!define C4P https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master
+!includeurl C4P/C4_Container.puml
+
+title Toget - C2 Diagrama de Contenedores 
+
+Person(provedor, "Proveedor Cuentas", "Persona que proporciona cuentas de streaming")
+Person(validador, "Validador Cuentas", "Persona que gestiona la autenticidad de las cuentas")
+Person(aPerfil, "Administrador Perfiles", "Persona que gestiona la distribucion de los perfiles")
+Person(personalPagos, "Personal Pagos", "Persona que gestiona las pagos y suscripciones")
+Person(atencion, "Personal Atención", "Personal que gestiona las incidencias de la cuenta")
+Person(suscriptor, "Suscriptor", "Persona que tiene suscripción activa")
+Person(cliente, "Cliente", "Cliente potencial de adquisición")
+
+System_Boundary(toget, "Toget") {
+    Container(webAppClientes, "App Web ", "Gatsby/Svelte","Interfaz web para clientes potenciales y suscriptores")
+    Container(webAppAdmin, "App Web Gestión", "React/Svelte","Interfaz web para personal")
+    Container(apiGateway, "API Gateway", "Spring Cloud Gateway / Kong","Punto de entrada único a los servicios")
+    Container(msClientesPotenciales, "ms-clientes-potenciales", "Spring Boot / Quarkus","Gestión de ofertas y promociones para clientes potenciales")
+    Container(msSuscriptores, "ms-gestion-suscriptores", "Spring Boot / Quarkus","Gestión de suscripciones")
+    Container(msPlataformas, "ms-gestion-platafomas", "Spring Boot / Quarkus","Gestión de plataformas y perfiles")
+    Container(msPagos, "ms-pagos", "Spring Boot / Quarkus","Gestión de pagos de suscripciones")
+    ContainerDb(dbPlataformas, "PetCare DB", "PostgreSQL/EDB","Base de datos principal")
+    ContainerDb(dbSuscripciones, "PetCare DB", "PostgreSQL/EDB","Base de datos principal")
+    ContainerDb(dbPlataformas, "PetCare DB", "PostgreSQL/EDB","Base de datos principal")
+    ContainerDb(dbPlataformas, "PetCare DB", "PostgreSQL/EDB","Base de datos principal")
+}
+
+System_Ext(notifProvider, "Proveedor de Notificaciones", "SMS / Email / WhatsApp")
+System_Ext(paymentGateway, "Pasarela de Pagos", "Pago electrónico")
+System_Ext(reniec, "RENIEC", "Validación de identidad")
+
+' Relaciones usuarios
+Rel(provedor, webAppAdmin, "Almacena")
+Rel(validador, webAppAdmin, "Verifica")
+Rel(aPerfil, webAppAdmin, "Gestiona")
+Rel(personalPagos, webAppAdmin, "Gestiona")
+Rel(atencion, webAppAdmin, "Registra")
+Rel(suscriptor, webAppClientes, "Visualiza")
+Rel(cliente, webAppClientes, "Visita")
+
+' Web → Gateway
+Rel(webAppClientes, apiGateway, "Consume API REST", "HTTPS/JSON")
+Rel(webAppAdmin, apiGateway, "Consume API REST", "HTTPS/JSON")
+
+' Gateway → Microservicios
+Rel(apiGateway, msClientesPotenciales, "Rutea")
+Rel(apiGateway, msSuscriptores, "Rutea")
+Rel(apiGateway, msPlataformas, "Rutea")
+Rel(apiGateway, msPagos, "Rutea")
+
+' Microservicios → DB
+Rel(msClientesPotenciales, dbPetCare, "Lee/Escribe")
+Rel(msSuscriptores, dbPetCare, "Lee/Escribe")
+Rel(msPlataformas, dbPetCare, "Lee/Escribe")
+Rel(msPagos, dbPetCare, "Lee/Escribe")
+
+' Integraciones externas
+Rel(msClientesPotenciales, notifProvider, "Envía ofertas y notificacion de cortes y pagos")
+Rel(msPagos, paymentGateway, "Procesa pagos")
+
+SHOW_LEGEND()
+@enduml
