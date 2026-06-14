@@ -1,0 +1,10 @@
+Archivo: c4-context
+Contexto -> Rel(aPerfil, tugeder, "Administra cantidad de perfiles y precios")
+Comentario -> Administra la cantidad de perfiles, adicional crea los nombres
+contraseñas y pin de los perfiles, adicional establece los precios de cada perfil
+depende de la cantidad de perfiles que falta por llenar en la cuenta ejemplo 
+si solo falta 1 perfil el precio puede estar a 50 %
+
+
+NOTA:
+Las suscripciones pueden terne varios perfiles 
