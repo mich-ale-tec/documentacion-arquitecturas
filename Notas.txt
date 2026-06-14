@@ -8,3 +8,6 @@ si solo falta 1 perfil el precio puede estar a 50 %
 
 NOTA:
 Las suscripciones pueden terne varios perfiles 
+La sucripcion tiene una fecha de inicio y una fecha de fin, puede tener varios "perfiles" a una plataforma
+
+Analizar las funciones del admisnitrador de perfiles
