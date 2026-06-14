@@ -1,0 +1,57 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title C3 – App Web Clientes | Gestión de Suscripciones
+
+Container_Boundary(webAppClientes, "App Web", "React SPA") {
+
+    Component(layout, "Layout", "React Component", "Estructura general de la aplicación")
+    Component(routeGuard, "ProtectedRoute", "Router Guard", "Protege rutas privadas")
+
+    Component(suscripcionesPage, "SuscripcionesPage", "React Component", "Gestión de suscripciones del usuario")
+
+    Component(suscripcionesFacade, "SuscripcionesFacade", "Facade", "Compone y adapta datos para la interfaz")
+
+    Component(suscripcionesHook, "useSuscripcionesHook", "Custom Hook", "Gestiona suscripciones")
+    Component(pagosHook, "usePagosHook", "Custom Hook", "Gestiona pagos")
+    Component(renovacionesHook, "useRenovacionesHook", "Custom Hook", "Gestiona renovaciones")
+
+    Component(authHook, "useAuth", "Custom Hook", "Gestión de autenticación y sesión")
+
+    Component(authStore, "AuthStore", "State Management", "Estado global de autenticación")
+    Component(suscripcionesStore, "SuscripcionesStore", "State Management", "Estado global de suscripciones")
+
+    Component(apiClient, "SuscripcionesApiClient", "API Client", "Operaciones REST de suscripciones")
+
+    Component(baseApiClient, "BaseApiClient", "HTTP Client", "Cliente HTTP compartido")
+
+    Component(authInterceptor, "AuthInterceptor", "HTTP Middleware", "Adjunta token JWT")
+    Component(errorInterceptor, "ErrorInterceptor", "HTTP Middleware", "Manejo centralizado de errores")
+}
+
+Rel(layout, suscripcionesPage, "Contiene")
+
+Rel(routeGuard, authHook, "Valida sesión")
+
+Rel(authHook, authStore, "Lee / Actualiza")
+
+Rel(suscripcionesPage, suscripcionesFacade, "Usa")
+
+Rel(suscripcionesFacade, suscripcionesHook, "Usa")
+Rel(suscripcionesFacade, pagosHook, "Usa")
+Rel(suscripcionesFacade, renovacionesHook, "Usa")
+
+Rel(suscripcionesHook, suscripcionesStore, "Lee / Actualiza")
+Rel(suscripcionesHook, apiClient, "Consume")
+
+Rel(pagosHook, apiClient, "Consume")
+Rel(renovacionesHook, apiClient, "Consume")
+
+Rel(apiClient, baseApiClient, "Usa")
+
+Rel(baseApiClient, authInterceptor, "Usa")
+Rel(baseApiClient, errorInterceptor, "Usa")
+
+Rel(authInterceptor, authStore, "Obtiene JWT")
+
+@enduml
