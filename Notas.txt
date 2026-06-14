@@ -11,3 +11,25 @@ Las suscripciones pueden terne varios perfiles
 La sucripcion tiene una fecha de inicio y una fecha de fin, puede tener varios "perfiles" a una plataforma
 
 Analizar las funciones del admisnitrador de perfiles
+
+ms-suscripciones
+- Crear suscripciones
+- Renovar suscripciones
+- Expirar suscripciones
+- Asociar perfiles
+
+ms-plataformas
+- Gestionar plataformas
+- Gestionar cuentas
+- Gestionar perfiles
+- Disponibilidad de perfiles
+
+Crear suscripción
+    ↓
+Buscar perfil disponible
+    ↓
+Reservar perfil
+    ↓
+Asignar perfil
+    ↓
+Confirmar suscripción

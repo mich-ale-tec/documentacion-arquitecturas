@@ -2,61 +2,68 @@
 !define C4P https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master
 !includeurl C4P/C4_Container.puml
 
-title Toget - C2 Diagrama de Contenedores 
+title Toget - C2 Diagrama de Contenedores
 
-Person(provedor, "Proveedor Cuentas", "Persona que proporciona cuentas de streaming")
-Person(validador, "Validador Cuentas", "Persona que gestiona la autenticidad de las cuentas")
-Person(aPerfil, "Administrador Perfiles", "Persona que gestiona la distribucion de los perfiles")
-Person(personalPagos, "Personal Pagos", "Persona que gestiona las pagos y suscripciones")
-Person(atencion, "Personal Atención", "Personal que gestiona las incidencias de la cuenta")
-Person(suscriptor, "Suscriptor", "Persona que tiene suscripción activa")
-Person(cliente, "Cliente", "Cliente potencial de adquisición")
+Person(provedor, "Proveedor de Cuentas", "")
+Person(validador, "Validador de Cuentas", "")
+Person(aPerfil, "Administrador de Perfiles", "")
+Person(personalPagos, "Personal de Pagos", "")
+Person(atencion, "Personal de Atención", "")
+Person(usuario, "Usuario", "")
 
 System_Boundary(toget, "Toget") {
-    Container(webAppClientes, "App Web ", "Gatsby/Svelte","Interfaz web para clientes potenciales y suscriptores")
-    Container(webAppAdmin, "App Web Gestión", "React/Svelte","Interfaz web para personal")
-    Container(apiGateway, "API Gateway", "Spring Cloud Gateway / Kong","Punto de entrada único a los servicios")
-    Container(msClientesPotenciales, "ms-clientes-potenciales", "Spring Boot / Quarkus","Gestión de ofertas y promociones para clientes potenciales")
-    Container(msSuscriptores, "ms-gestion-suscriptores", "Spring Boot / Quarkus","Gestión de suscripciones")
-    Container(msPlataformas, "ms-gestion-platafomas", "Spring Boot / Quarkus","Gestión de plataformas y perfiles")
-    Container(msPagos, "ms-pagos", "Spring Boot / Quarkus","Gestión de pagos de suscripciones")
-    ContainerDb(dbPlataformas, "PetCare DB", "PostgreSQL/EDB","Base de datos principal")
-    ContainerDb(dbSuscripciones, "PetCare DB", "PostgreSQL/EDB","Base de datos principal")
-    ContainerDb(dbPlataformas, "PetCare DB", "PostgreSQL/EDB","Base de datos principal")
-    ContainerDb(dbPlataformas, "PetCare DB", "PostgreSQL/EDB","Base de datos principal")
+    Container(webAppClientes, "App Web", "React/Vue", "Interfaz web para usuarios")
+    Container(movilAppClientes, "Movil App", "React Native/Kotlin", "Interfaz web para usuarios")
+    Container(webAppAdmin, "App Web Gestión", "React/Angular", "Interfaz web para el personal operativo")
+    Container(apiGatewayBackOffice, "API Gateway Back Office", "Spring Cloud Gateway / Kong","Punto de entrada único a los servicios para el personal")
+    Container(apiGatewayFrontOffice, "API Gateway Front Office", "Spring Cloud Gateway / Kong","Punto de entrada único a los servicios para el cliente")
+    Container(msMarketing, "ms-marketing", "NestJS", "Gestiona promociones, campañas y notificaciones")
+    Container(msSuscripciones, "ms-gestion-suscripciones", "NestJS", "Gestiona usuarios, suscripciones, vigencias y renovaciones")
+    Container(msPlataformas, "ms-gestion-plataformas", "NestJS", "Gestiona plataformas de streaming, cuentas, perfiles y asignaciones")
+    Container(msPagos, "ms-pagos", "NestJS", "Gestiona pagos y confirmaciones de transacciones")
+    ContainerDb(dbMarketing, "Marketing DB", "MongoDB/Dinamo BD", "Base de datos de marketing y campañas")
+    ContainerDb(dbPromociones, "Promociones DB", "Redis/Memcached", "Base de datos de promociones y ofertas")
+    ContainerDb(dbSuscripciones, "Suscripciones DB", "PostgreSQL/EDB", "Base de datos de usuarios y suscripciones")
+    ContainerDb(dbPlataformas, "Plataformas DB", "PostgreSQL/EDB", "Base de datos de plataformas, cuentas y perfiles")
+    ContainerDb(dbPagos, "Pagos DB", "PostgreSQL/EDB", "Base de datos de pagos y transacciones")
 }
 
-System_Ext(notifProvider, "Proveedor de Notificaciones", "SMS / Email / WhatsApp")
-System_Ext(paymentGateway, "Pasarela de Pagos", "Pago electrónico")
-System_Ext(reniec, "RENIEC", "Validación de identidad")
+System_Ext(whatsapp,"WhatsApp","")
+System_Ext(correo, "Correo Electrónico", "")
+System_Ext(paymentGateway,"Pasarela de Pagos", "")
 
 ' Relaciones usuarios
-Rel(provedor, webAppAdmin, "Almacena")
-Rel(validador, webAppAdmin, "Verifica")
-Rel(aPerfil, webAppAdmin, "Gestiona")
-Rel(personalPagos, webAppAdmin, "Gestiona")
-Rel(atencion, webAppAdmin, "Registra")
-Rel(suscriptor, webAppClientes, "Visualiza")
-Rel(cliente, webAppClientes, "Visita")
+Rel(provedor, webAppAdmin, "Registra cuentas")
+Rel(validador, webAppAdmin, "Valida cuentas y gestiona precios")
+Rel(aPerfil, webAppAdmin, "Administra perfiles")
+Rel(personalPagos, webAppAdmin, "Valida pagos y activa suscripciones")
+Rel(atencion, webAppAdmin, "Gestiona incidencias")
+Rel(usuario, webAppClientes, "Consulta servicios y gestiona sus suscripciones")
+Rel(usuario, movilAppClientes, "Consulta servicios y gestiona sus suscripciones")
 
-' Web → Gateway
-Rel(webAppClientes, apiGateway, "Consume API REST", "HTTPS/JSON")
-Rel(webAppAdmin, apiGateway, "Consume API REST", "HTTPS/JSON")
+' Web → Gateway Front Office y Back Office
+Rel(webAppClientes, apiGatewayFrontOffice, "Consume API REST", "HTTPS/JSON")
+Rel(movilAppClientes, apiGatewayFrontOffice, "Consume API REST", "HTTPS/JSON")
+Rel(webAppAdmin, apiGatewayBackOffice, "Consume API REST", "HTTPS/JSON")
 
 ' Gateway → Microservicios
-Rel(apiGateway, msClientesPotenciales, "Rutea")
-Rel(apiGateway, msSuscriptores, "Rutea")
-Rel(apiGateway, msPlataformas, "Rutea")
-Rel(apiGateway, msPagos, "Rutea")
+Rel(apiGatewayFrontOffice, msMarketing, "Rutea")
+Rel(apiGatewayFrontOffice, msSuscripciones, "Rutea")
+Rel(apiGatewayBackOffice, msPlataformas, "Rutea")
+Rel(apiGatewayBackOffice, msPagos, "Rutea")
 
 ' Microservicios → DB
-Rel(msClientesPotenciales, dbPetCare, "Lee/Escribe")
-Rel(msSuscriptores, dbPetCare, "Lee/Escribe")
-Rel(msPlataformas, dbPetCare, "Lee/Escribe")
-Rel(msPagos, dbPetCare, "Lee/Escribe")
+Rel(msSuscripciones, dbSuscripciones, "Lee/Escribe")
+Rel(msPlataformas, dbPlataformas, "Lee/Escribe")
+Rel(msPagos, dbPagos, "Lee/Escribe")
+Rel(msMarketing, dbPromociones, "Lee/Escribe(Cache)")
+Rel(msMarketing, dbMarketing, "Lee/Escribe")
+Rel(msMarketing, dbSuscripciones, "Consume información de usuarios")
+Rel(msMarketing, dbPlataformas, "Consume información de plataformas")
 
 ' Integraciones externas
-Rel(msClientesPotenciales, notifProvider, "Envía ofertas y notificacion de cortes y pagos")
+Rel(msMarketing, whatsapp, "Envía promociones y notificaciones")
+Rel(msPlataformas, correo, "Envía credenciales y perfiles asignados")
 Rel(msPagos, paymentGateway, "Procesa pagos")
 
 SHOW_LEGEND()
