@@ -1,0 +1,35 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title C3 – ms-gestion-suscripciones | Diagrama de Componentes - NestJS Layered Architecture
+
+Container_Boundary(msSuscripciones, "ms-gestion-suscripciones") {
+
+    Component(controller, "SuscripcionesController", "REST Controller", "Expone endpoints de gestión de suscripciones")
+    Component(service, "SuscripcionesService", "Service", "Orquesta la gestión de suscripciones y vigencias")
+    Component(dto, "SuscripcionDto", "DTO", "Objeto de transferencia de datos")
+    Component(mapper, "SuscripcionMapper", "Mapper", "Transforma DTOs y entidades")
+    Component(entity, "SuscripcionEntity", "Entity", "Entidad de persistencia de suscripciones")
+    Component(repository, "SuscripcionRepository", "Repository", "Contrato de persistencia")
+    Component(exception, "GlobalException", "Exception", "Manejo centralizado de excepciones")
+    Component(config, "AppConfig", "Configuration", "Configuraciones globales")
+}
+
+Rel(controller, service, "Invoca")
+Rel(controller, dto, "Usa")
+
+Rel(service, dto, "Usa")
+Rel(service, mapper, "Usa")
+Rel(service, entity, "Usa")
+Rel(service, repository, "Persiste mediante")
+
+Rel(mapper, dto, "Usa")
+Rel(mapper, entity, "Usa")
+
+Rel(repository, entity, "Usa")
+
+Rel(controller, exception, "Lanza")
+Rel(service, exception, "Lanza")
+Rel(repository, exception, "Lanza")
+
+@enduml

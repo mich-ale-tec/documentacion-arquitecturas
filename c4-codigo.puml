@@ -1,0 +1,86 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title C4 – Nivel 4 (Código) | App Web Clientes (React)
+
+Container_Boundary(webAppClientes, "App Web Clientes", "React SPA") {
+
+    package "pages" {
+        Component(InicioPage, "InicioPage", "React Component", "Página principal de la plataforma")
+        Component(SuscripcionesPage, "SuscripcionesPage", "React Component", "Pantalla principal de gestión de suscripciones")
+    }
+
+    package "components" {
+        Component(Promociones, "Promociones", "React Component", "Visualización de promociones y campañas")
+        Component(Suscripciones, "Suscripciones", "React Component", "Visualización de suscripciones")
+        Component(Pagos, "Pagos", "React Component", "Gestión de pagos")
+    }
+
+    package "application.facade" {
+        Component(SuscripcionesFacade, "SuscripcionesFacade", "Facade", "Compone y adapta datos para la interfaz")
+    }
+
+    package "application.hooks" {
+        Component(UsePromocionesHook, "usePromocionesHook", "Custom Hook", "Gestiona promociones")
+        Component(UseSuscripcionesHook, "useSuscripcionesHook", "Custom Hook", "Gestiona suscripciones")
+        Component(UsePagosHook, "usePagosHook", "Custom Hook", "Gestiona pagos")
+        Component(UseAuth, "useAuth", "Custom Hook", "Gestión de autenticación y sesión")
+    }
+
+    package "application.store" {
+        Component(AuthStore, "AuthStore", "State Management", "Estado global de autenticación")
+        Component(SuscripcionesStore, "SuscripcionesStore", "State Management", "Estado global de suscripciones")
+    }
+
+    package "infrastructure.api" {
+        Component(BaseApiClient, "BaseApiClient", "HTTP Client", "Cliente HTTP compartido")
+        Component(SuscripcionesServices, "SuscripcionesServices", "API Client", "Operaciones REST de suscripciones")
+        Component(PromocionesServices, "PromocionesServices", "API Client", "Operaciones REST de promociones")
+    }
+
+    package "infrastructure.interceptors" {
+        Component(AuthInterceptor, "AuthInterceptor", "HTTP Middleware", "Adjunta token JWT")
+        Component(ErrorInterceptor, "ErrorInterceptor", "HTTP Middleware", "Manejo centralizado de errores")
+    }
+
+    package "infrastructure.guards" {
+        Component(ProtectedRoute, "ProtectedRoute", "Router Guard", "Protege rutas privadas")
+    }
+}
+
+' UI
+Rel(InicioPage, UsePromocionesHook, "Usa")
+
+Rel(Promociones, UsePromocionesHook, "Usa")
+
+Rel(SuscripcionesPage, SuscripcionesFacade, "Usa")
+Rel(Suscripciones, SuscripcionesFacade, "Usa")
+Rel(Pagos, SuscripcionesFacade, "Usa")
+
+' Facade
+Rel(SuscripcionesFacade, UseSuscripcionesHook, "Usa")
+Rel(SuscripcionesFacade, UsePagosHook, "Usa")
+
+' Hooks
+Rel(UsePromocionesHook, PromocionesServices, "Consume API")
+
+Rel(UseSuscripcionesHook, SuscripcionesStore, "Lee / Actualiza")
+Rel(UseSuscripcionesHook, SuscripcionesServices, "Consume API")
+
+Rel(UsePagosHook, SuscripcionesServices, "Consume API")
+
+Rel(UseAuth, AuthStore, "Lee / Actualiza")
+
+' Seguridad
+Rel(ProtectedRoute, UseAuth, "Valida sesión")
+
+' Infraestructura
+Rel(SuscripcionesServices, BaseApiClient, "Usa")
+Rel(PromocionesServices, BaseApiClient, "Usa")
+
+Rel(BaseApiClient, AuthInterceptor, "Usa")
+Rel(BaseApiClient, ErrorInterceptor, "Usa")
+
+Rel(AuthInterceptor, AuthStore, "Obtiene JWT")
+
+@enduml
