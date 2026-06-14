@@ -21,7 +21,7 @@ Container_Boundary(webAppClientes, "App Web", "React SPA") {
     Component(authStore, "AuthStore", "State Management", "Estado global de autenticación")
     Component(suscripcionesStore, "SuscripcionesStore", "State Management", "Estado global de suscripciones")
 
-    Component(apiClient, "SuscripcionesApiClient", "API Client", "Operaciones REST de suscripciones")
+    Component(suscripcionesServices, "SuscripcionesServices", "API Client", "Operaciones REST")
 
     Component(baseApiClient, "BaseApiClient", "HTTP Client", "Cliente HTTP compartido")
 
@@ -42,12 +42,12 @@ Rel(suscripcionesFacade, pagosHook, "Usa")
 Rel(suscripcionesFacade, renovacionesHook, "Usa")
 
 Rel(suscripcionesHook, suscripcionesStore, "Lee / Actualiza")
-Rel(suscripcionesHook, apiClient, "Consume")
+Rel(suscripcionesHook, suscripcionesServices, "Consume")
 
-Rel(pagosHook, apiClient, "Consume")
-Rel(renovacionesHook, apiClient, "Consume")
+Rel(pagosHook, suscripcionesServices, "Consume")
+Rel(renovacionesHook, suscripcionesServices, "Consume")
 
-Rel(apiClient, baseApiClient, "Usa")
+Rel(suscripcionesServices, baseApiClient, "Usa")
 
 Rel(baseApiClient, authInterceptor, "Usa")
 Rel(baseApiClient, errorInterceptor, "Usa")
